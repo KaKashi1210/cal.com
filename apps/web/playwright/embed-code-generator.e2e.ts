@@ -186,6 +186,27 @@ test.describe("Embed Code Generator Tests", () => {
         calLink: `${pro.username}/30-min`,
       });
     });
+
+    test("open Embed Dialog and choose Email Embed First Event Type", async ({ page, users }) => {
+      const [pro] = users.get();
+      const embedUrl = await clickFirstEventTypeEmbedButton(page);
+
+      await expectToBeNavigatingToEmbedTypesDialog(page, {
+        embedUrl,
+        basePage: "/event-types",
+      });
+
+      chooseEmbedType(page, "email");
+
+      await expectToBeNavigatingToEmbedCodeAndPreviewDialog(page, {
+        embedUrl,
+        embedType: "email",
+        basePage: "/event-types",
+      });
+      await expectToContainValidCode(page, { embedType: "email" });
+
+      await gotToPreviewTab(page);
+    });
   });
 
   test.describe("Event Type Edit Page", () => {
